@@ -76,26 +76,36 @@ def qualifying_flow(client_name, client_email, client_phone):
         if destination:
             # Step 4: Based on destination, show specific cruise lines or resorts
             if vacation_type == "Cruise" or vacation_type == "Luxury Cruise":
+                # Use .get() method to safely access dictionary elements
                 matching_cruise_lines = cruise_lines.get(destination, {}).get(experience_type, [])
-                st.write(f"### Recommended Cruise Lines for {destination} ({experience_type} experience):")
-                st.write(matching_cruise_lines)
-                selected_cruise_line = st.selectbox("Choose a cruise line to view details:", matching_cruise_lines)
-                if selected_cruise_line:
-                    display_cruise_details(selected_cruise_line, destination)
+                if matching_cruise_lines:
+                    st.write(f"### Recommended Cruise Lines for {destination} ({experience_type} experience):")
+                    st.write(matching_cruise_lines)
+                    selected_cruise_line = st.selectbox("Choose a cruise line to view details:", matching_cruise_lines)
+                    if selected_cruise_line:
+                        display_cruise_details(selected_cruise_line, destination)
+                else:
+                    st.write(f"No matching cruise lines found for {experience_type} in {destination}.")
             elif vacation_type == "Land Travel" or vacation_type == "Combination":
                 matching_resorts = resorts.get(destination, [])
-                st.write(f"### Recommended Resorts for {destination} ({experience_type} experience):")
-                st.write(matching_resorts)
-                selected_resort = st.selectbox("Choose a resort to view details:", matching_resorts)
-                if selected_resort:
-                    display_resort_details(selected_resort, destination)
+                if matching_resorts:
+                    st.write(f"### Recommended Resorts for {destination} ({experience_type} experience):")
+                    st.write(matching_resorts)
+                    selected_resort = st.selectbox("Choose a resort to view details:", matching_resorts)
+                    if selected_resort:
+                        display_resort_details(selected_resort, destination)
+                else:
+                    st.write(f"No matching resorts found for {experience_type} in {destination}.")
             elif vacation_type == "River Cruise":
                 river_lines = cruise_lines.get("River", [])
-                st.write(f"### Recommended River Cruise Lines for {destination}:")
-                st.write(river_lines)
-                selected_river_line = st.selectbox("Choose a river cruise line to view details:", river_lines)
-                if selected_river_line:
-                    display_cruise_details(selected_river_line, "River")
+                if river_lines:
+                    st.write(f"### Recommended River Cruise Lines for {destination}:")
+                    st.write(river_lines)
+                    selected_river_line = st.selectbox("Choose a river cruise line to view details:", river_lines)
+                    if selected_river_line:
+                        display_cruise_details(selected_river_line, "River")
+                else:
+                    st.write("No matching river cruise lines found.")
 
 # Function to handle Direct Selection Flow
 def direct_selection(client_name, client_email, client_phone):
