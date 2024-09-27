@@ -119,8 +119,8 @@ def direct_selection(client_name, client_email, client_phone):
     
     # Step 2: Display matching options
     if direct_search:
-        # Flatten the nested structure of cruise lines to get a single list of all cruise line names.
-        all_cruise_lines = [cruise for destination in cruise_lines.values() for experience in destination.values() for cruise in experience]
+        # Correctly flatten all cruise line names from the nested dictionary structure
+        all_cruise_lines = [cruise for destination in cruise_lines for experience_type in cruise_lines[destination] for cruise in cruise_lines[destination][experience_type]]
         matching_cruises = [line for line in all_cruise_lines if direct_search.lower() in line.lower()]
         matching_resorts = [resort for resort in sum(resorts.values(), []) if direct_search.lower() in resort.lower()]
 
@@ -136,8 +136,8 @@ def direct_selection(client_name, client_email, client_phone):
     # Step 3: Direct selection
     direct_selection_type = st.selectbox("Select the type of option to view:", ["Cruise Line", "Resort"])
     if direct_selection_type == "Cruise Line":
-        # Flatten the nested structure of cruise lines into a single list
-        all_cruise_lines = [cruise for destination in cruise_lines.values() for experience in destination.values() for cruise in experience]
+        # Correctly flatten all cruise line names
+        all_cruise_lines = [cruise for destination in cruise_lines for experience_type in cruise_lines[destination] for cruise in cruise_lines[destination][experience_type]]
         selected_cruise = st.selectbox("Select a cruise line:", all_cruise_lines)
         if selected_cruise:
             display_cruise_details(selected_cruise, "Direct Selection")
@@ -164,4 +164,3 @@ def display_resort_details(resort, destination):
 
 # Run the client info screen function to start the app
 client_info_screen()
-
