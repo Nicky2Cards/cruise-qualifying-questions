@@ -6,19 +6,22 @@ cruise_lines = {
         "Luxury": ["Celebrity Cruises", "Seabourn", "Regent Seven Seas"],
         "Family-Friendly": ["Disney Cruise Line", "Royal Caribbean", "Carnival"],
         "Adventure": ["Norwegian Cruise Line", "MSC Cruises", "Royal Caribbean"],
-        "Romantic Getaway": ["Princess Cruises", "Holland America", "Oceania Cruises"]
+        "Romantic Getaway": ["Princess Cruises", "Holland America", "Oceania Cruises"],
+        "Group Travel": ["Royal Caribbean", "Carnival", "MSC Cruises"]
     },
     "Mediterranean": {
         "Luxury": ["Regent Seven Seas", "Seabourn", "Silversea Cruises"],
         "Family-Friendly": ["Royal Caribbean", "MSC Cruises", "Norwegian Cruise Line"],
         "Adventure": ["Celebrity Cruises", "Princess Cruises", "Costa Cruises"],
-        "Romantic Getaway": ["Viking Cruises", "Holland America", "Oceania Cruises"]
+        "Romantic Getaway": ["Viking Cruises", "Holland America", "Oceania Cruises"],
+        "Group Travel": ["MSC Cruises", "Norwegian Cruise Line", "Costa Cruises"]
     },
     "Alaska": {
         "Luxury": ["Regent Seven Seas", "Seabourn"],
         "Family-Friendly": ["Princess Cruises", "Royal Caribbean", "Disney Cruise Line"],
         "Adventure": ["Norwegian Cruise Line", "Celebrity Cruises", "Holland America"],
-        "Cultural Immersion": ["Princess Cruises", "Holland America"]
+        "Cultural Immersion": ["Princess Cruises", "Holland America"],
+        "Group Travel": ["Princess Cruises", "Holland America", "Norwegian Cruise Line"]
     },
     "River": ["Viking River Cruises", "AmaWaterways", "Uniworld", "Avalon Waterways"],
     "Luxury": ["Regent Seven Seas", "Seabourn", "Silversea Cruises", "Oceania Cruises", "Azamara"]
@@ -52,7 +55,6 @@ def client_info_screen():
         qualifying_flow(client_name, client_email, client_phone)
     elif start_option == "Direct Selection (if client already has a preference)":
         direct_selection(client_name, client_email, client_phone)
-
 # Function to handle the Qualifying Questions Flow
 def qualifying_flow(client_name, client_email, client_phone):
     st.header("Qualifying Questions")
@@ -75,7 +77,7 @@ def qualifying_flow(client_name, client_email, client_phone):
         
         if destination:
             # Step 4: Based on destination, show specific cruise lines or resorts
-            if vacation_type == "Cruise" or vacation_type == "Luxury Cruise":
+            if vacation_type in ["Cruise", "Luxury Cruise", "Group Travel"]:
                 matching_cruise_lines = cruise_lines.get(destination, {}).get(experience_type, [])
                 if matching_cruise_lines:
                     st.write(f"### Recommended Cruise Lines for {destination} ({experience_type} experience):")
@@ -86,7 +88,7 @@ def qualifying_flow(client_name, client_email, client_phone):
                         display_cruise_details(selected_cruise_line, destination)
                 else:
                     st.write(f"No matching cruise lines found for {experience_type} in {destination}.")
-            elif vacation_type == "Land Travel" or vacation_type == "Combination":
+            elif vacation_type in ["Land Travel", "Combination"]:
                 matching_resorts = resorts.get(destination, [])
                 if matching_resorts:
                     st.write(f"### Recommended Resorts for {destination} ({experience_type} experience):")
@@ -108,7 +110,6 @@ def qualifying_flow(client_name, client_email, client_phone):
                         display_cruise_details(selected_river_line, "River")
                 else:
                     st.write("No matching river cruise lines found.")
-
 # Function to handle Direct Selection Flow
 def direct_selection(client_name, client_email, client_phone):
     st.header("Direct Selection")
@@ -145,7 +146,6 @@ def direct_selection(client_name, client_email, client_phone):
         selected_resort = st.selectbox("Select a resort:", sum(resorts.values(), []))
         if selected_resort:
             display_resort_details(selected_resort, "Direct Selection")
-
 # Function to display details for selected cruise line
 def display_cruise_details(cruise_line, destination):
     st.subheader(f"Details for {cruise_line}")
@@ -163,4 +163,4 @@ def display_resort_details(resort, destination):
     st.write(f"**Popular Activities**: Water sports, cultural tours, guided excursions.")
 
 # Run the client info screen function to start the app
-client_info_screen()
+client_info_screen
