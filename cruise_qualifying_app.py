@@ -1,57 +1,147 @@
 import streamlit as st
 
-# Function to define the qualifying questions flow
-def run_qualifying_questions():
-    st.title("Cruise Qualifying Questions")
+# Placeholder data for cruise lines, resorts, ship size, and excursions based on destination and type
+cruise_lines = {
+    "Caribbean": {
+        "Luxury": ["Celebrity Cruises", "Seabourn", "Regent Seven Seas"],
+        "Family-Friendly": ["Disney Cruise Line", "Royal Caribbean", "Carnival"],
+        "Adventure": ["Norwegian Cruise Line", "MSC Cruises", "Royal Caribbean"],
+        "Romantic Getaway": ["Princess Cruises", "Holland America", "Oceania Cruises"]
+    },
+    "Mediterranean": {
+        "Luxury": ["Regent Seven Seas", "Seabourn", "Silversea Cruises"],
+        "Family-Friendly": ["Royal Caribbean", "MSC Cruises", "Norwegian Cruise Line"],
+        "Adventure": ["Celebrity Cruises", "Princess Cruises", "Costa Cruises"],
+        "Romantic Getaway": ["Viking Cruises", "Holland America", "Oceania Cruises"]
+    },
+    "Alaska": {
+        "Luxury": ["Regent Seven Seas", "Seabourn"],
+        "Family-Friendly": ["Princess Cruises", "Royal Caribbean", "Disney Cruise Line"],
+        "Adventure": ["Norwegian Cruise Line", "Celebrity Cruises", "Holland America"],
+        "Cultural Immersion": ["Princess Cruises", "Holland America"]
+    },
+    "River": ["Viking River Cruises", "AmaWaterways", "Uniworld", "Avalon Waterways"],
+    "Luxury": ["Regent Seven Seas", "Seabourn", "Silversea Cruises", "Oceania Cruises", "Azamara"]
+}
 
-    # Step 1: Initial Question - Travel Destination or Region
-    region = st.selectbox("What is your ideal travel destination or region?",
-                          ["Select an option", "Caribbean", "Mediterranean/Greek Isles", "Alaska",
-                           "Northern Europe/Scandinavia/Baltic", "Asia/South Pacific", 
-                           "River Cruises (Europe, Mississippi, etc.)", "Other/Not Sure Yet"])
+resorts = {
+    "Caribbean": ["Sandals Resorts", "Club Med", "Riu", "Hyatt Zilara", "Four Seasons"],
+    "Europe": ["Marriott", "Four Seasons", "Ritz-Carlton", "Hilton"],
+    "Asia": ["Aman Resorts", "Mandarin Oriental", "Shangri-La", "Six Senses"],
+    "Luxury": ["Aman Resorts", "Four Seasons", "Ritz-Carlton", "Belmond"]
+}
+
+# Function to display client information screen
+def client_info_screen():
+    st.title("Client Information and Vacation Qualifier")
+
+    # Collecting basic client information
+    client_name = st.text_input("Client Name:")
+    client_email = st.text_input("Client Email:")
+    client_phone = st.text_input("Client Phone Number:")
     
-    if region == "Caribbean":
-        # Step 2: Caribbean - Type of Experience
-        caribbean_experience = st.selectbox("What type of experience are you looking for in the Caribbean?",
-                                            ["Select an option", "Relaxing beach vacation", "Adventure", 
-                                             "Cultural exploration", "Family-friendly activities"])
-        if caribbean_experience != "Select an option":
-            # Step 3: Caribbean - Length of Cruise
-            caribbean_length = st.selectbox("How long would you like your cruise to be?",
-                                            ["Select an option", "3-5 days", "6-8 days", "9+ days"])
-            if caribbean_length != "Select an option":
-                # Step 4: Caribbean - Specific Islands
-                caribbean_islands = st.multiselect("Are there any specific islands you’d like to visit?",
-                                                   ["Bahamas", "St. Thomas", "Aruba", "Jamaica", "Cozumel", "Other"])
-                st.write(f"Based on your choices, you're interested in a {caribbean_length} Caribbean cruise focusing on {caribbean_experience.lower()} experiences.")
-                
-    elif region == "Mediterranean/Greek Isles":
-        # Step 2: Mediterranean - Focus
-        mediterranean_focus = st.selectbox("Are you looking for a cruise focused on historical sites and cultural experiences, or more on leisure and relaxation?",
-                                           ["Select an option", "Historical and cultural", "Leisure and relaxation", "A mix of both"])
-        if mediterranean_focus != "Select an option":
-            # Step 3: Mediterranean - Regions
-            mediterranean_regions = st.multiselect("Which regions are you most interested in?",
-                                                   ["Greek Isles", "Italian coast", "French Riviera", "Spanish Coast", "Turkish Coast"])
-            if mediterranean_regions:
-                # Step 4: Mediterranean - Port Style
-                mediterranean_port_style = st.selectbox("Do you prefer cruises that visit many ports with shorter stays, or fewer ports with more time in each location?",
-                                                        ["Select an option", "Many ports", "Fewer ports with longer stays"])
-                st.write(f"You're interested in exploring {', '.join(mediterranean_regions)} in a {mediterranean_focus.lower()} style.")
+    st.write("## Choose how you'd like to start:")
+    
+    # Starting point selection
+    start_option = st.radio(
+        "How would you like to proceed?",
+        ("Qualifying Questions", "Direct Selection (if client already has a preference)")
+    )
+    
+    if start_option == "Qualifying Questions":
+        qualifying_flow(client_name, client_email, client_phone)
+    elif start_option == "Direct Selection (if client already has a preference)":
+        direct_selection(client_name, client_email, client_phone)
 
-    elif region == "Alaska":
-        # Step 2: Alaska - Attraction Focus
-        alaska_focus = st.selectbox("What draws you to Alaska?",
-                                    ["Select an option", "Scenery and wildlife", "Adventure activities", "Native culture and history"])
-        if alaska_focus != "Select an option":
-            # Step 3: Alaska - Land Tour
-            alaska_land_tour = st.radio("Would you prefer a cruise that includes a land tour (e.g., Denali National Park) before or after the cruise?",
-                                        ["Yes", "No"])
-            if alaska_land_tour:
-                # Step 4: Alaska - Activities
-                alaska_activities = st.multiselect("Are there specific activities you want to experience in Alaska?",
-                                                   ["Glacier viewing", "Whale watching", "Hiking", "Native cultural tours"])
-                st.write(f"You're looking for an Alaskan adventure focused on {alaska_focus.lower()}, including activities like {', '.join(alaska_activities)}.")
+# Function to handle the Qualifying Questions Flow
+def qualifying_flow(client_name, client_email, client_phone):
+    st.header("Qualifying Questions")
 
-# Run the app
-run_qualifying_questions()
+    # Step 1: Vacation Type
+    vacation_type = st.selectbox(
+        "What type of vacation experience are you looking for?",
+        ["Cruise", "Land Travel", "River Cruise", "Luxury Cruise", "Group Travel", "Combination"]
+    )
+    
+    if vacation_type:
+        # Step 2: Experience Type
+        experience_type = st.selectbox(
+            f"What kind of {vacation_type.lower()} experience are you hoping for?",
+            ["Adventure", "Relaxation", "Cultural Immersion", "Family-Friendly", "Romantic", "Other"]
+        )
+
+        # Step 3: Preferred Destination or Region
+        destination = st.selectbox("What is your preferred destination or region?", list(cruise_lines.keys()) + list(resorts.keys()))
+        
+        if destination:
+            # Step 4: Based on destination, show specific cruise lines or resorts
+            if vacation_type == "Cruise" or vacation_type == "Luxury Cruise":
+                matching_cruise_lines = cruise_lines.get(destination, {}).get(experience_type, [])
+                st.write(f"### Recommended Cruise Lines for {destination} ({experience_type} experience):")
+                st.write(matching_cruise_lines)
+                selected_cruise_line = st.selectbox("Choose a cruise line to view details:", matching_cruise_lines)
+                if selected_cruise_line:
+                    display_cruise_details(selected_cruise_line, destination)
+            elif vacation_type == "Land Travel" or vacation_type == "Combination":
+                matching_resorts = resorts.get(destination, [])
+                st.write(f"### Recommended Resorts for {destination} ({experience_type} experience):")
+                st.write(matching_resorts)
+                selected_resort = st.selectbox("Choose a resort to view details:", matching_resorts)
+                if selected_resort:
+                    display_resort_details(selected_resort, destination)
+            elif vacation_type == "River Cruise":
+                river_lines = cruise_lines.get("River", [])
+                st.write(f"### Recommended River Cruise Lines for {destination}:")
+                st.write(river_lines)
+                selected_river_line = st.selectbox("Choose a river cruise line to view details:", river_lines)
+                if selected_river_line:
+                    display_cruise_details(selected_river_line, "River")
+
+# Function to handle Direct Selection Flow
+def direct_selection(client_name, client_email, client_phone):
+    st.header("Direct Selection")
+
+    # Step 1: Search or Select Direct Options
+    st.write("Use the search bar or select from the list below to jump directly to a destination or provider:")
+    direct_search = st.text_input("Search for a destination or provider (e.g., ‘Caribbean,’ ‘Royal Caribbean,’ ‘Sandals’):")
+    
+    # Step 2: Display matching options
+    if direct_search:
+        matching_cruises = [line for line in sum(cruise_lines.values(), []) if direct_search.lower() in line.lower()]
+        matching_resorts = [resort for resort in sum(resorts.values(), []) if direct_search.lower() in resort.lower()]
+        if matching_cruises:
+            st.write("### Matching Cruise Lines:")
+            st.write(matching_cruises)
+        if matching_resorts:
+            st.write("### Matching Resorts:")
+            st.write(matching_resorts)
+    
+    # Step 3: Direct selection
+    direct_selection_type = st.selectbox("Select the type of option to view:", ["Cruise Line", "Resort"])
+    if direct_selection_type == "Cruise Line":
+        selected_cruise = st.selectbox("Select a cruise line:", sum(cruise_lines.values(), []))
+        if selected_cruise:
+            display_cruise_details(selected_cruise, "Direct Selection")
+    elif direct_selection_type == "Resort":
+        selected_resort = st.selectbox("Select a resort:", sum(resorts.values(), []))
+        if selected_resort:
+            display_resort_details(selected_resort, "Direct Selection")
+
+# Function to display details for selected cruise line
+def display_cruise_details(cruise_line, destination):
+    st.subheader(f"Details for {cruise_line}")
+    st.write(f"**Destination**: {destination}")
+    st.write(f"**Ship Size**: Medium to Large")
+    st.write(f"**Known Activities**: Specialty dining, entertainment shows, spas, and more.")
+    st.write(f"**Popular Excursions**: Island tours, adventure sports, cultural experiences.")
+
+# Function to display details for selected resort
+def display_resort_details(resort, destination):
+    st.subheader(f"Details for {resort}")
+    st.write(f"**Destination**: {destination}")
+    st.write(f"**Resort Size**: Medium to Large")
+    st.write(f"**Known Amenities**: Swim-up bars, golf courses, fine dining, beach access.")
+    st.write(f"**Popular Activities**: Water sports, cultural tours, guided excursions.")
+
+# Run the client info screen function to start the app
+client_info_screen()
