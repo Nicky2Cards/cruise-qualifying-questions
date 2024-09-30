@@ -164,7 +164,6 @@ def display_cruise_details(cruise_line, destination):
     st.subheader(f"Details for {cruise_line}")
     st.write(f"**Destination**: {destination}")
     st.write(f"**Ship Size**: Medium to Large")
-    st.write(f"**Known Activities**: Specialty dining, entertainment
     st.write(f"**Known Activities**: Specialty dining, entertainment shows, spas, and more.")
     st.write(f"**Popular Excursions**: Island tours, adventure sports, cultural experiences.")
 
