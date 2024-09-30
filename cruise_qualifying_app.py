@@ -55,6 +55,7 @@ def client_info_screen():
         qualifying_flow(client_name, client_email, client_phone)
     elif start_option == "Direct Selection (if client already has a preference)":
         direct_selection(client_name, client_email, client_phone)
+
 # Function to handle the Qualifying Questions Flow
 def qualifying_flow(client_name, client_email, client_phone):
     st.header("Qualifying Questions")
@@ -110,6 +111,7 @@ def qualifying_flow(client_name, client_email, client_phone):
                         display_cruise_details(selected_river_line, "River")
                 else:
                     st.write("No matching river cruise lines found.")
+
 # Function to handle Direct Selection Flow
 def direct_selection(client_name, client_email, client_phone):
     st.header("Direct Selection")
@@ -146,6 +148,7 @@ def direct_selection(client_name, client_email, client_phone):
         selected_resort = st.selectbox("Select a resort:", sum(resorts.values(), []))
         if selected_resort:
             display_resort_details(selected_resort, "Direct Selection")
+
 # Function to display details for selected cruise line
 def display_cruise_details(cruise_line, destination):
     st.subheader(f"Details for {cruise_line}")
@@ -163,4 +166,4 @@ def display_resort_details(resort, destination):
     st.write(f"**Popular Activities**: Water sports, cultural tours, guided excursions.")
 
 # Run the client info screen function to start the app
-client_info_screen
+client_info_screen()
