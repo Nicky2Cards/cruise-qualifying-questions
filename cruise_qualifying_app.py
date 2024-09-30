@@ -123,7 +123,12 @@ def direct_selection(client_name, client_email, client_phone):
     # Step 2: Display matching options
     if direct_search:
         # Correctly flatten all cruise line names from the nested dictionary structure
-        all_cruise_lines = [cruise for destination in cruise_lines for experience_type in cruise_lines[destination] for cruise in cruise_lines[destination][experience_type]]
+        all_cruise_lines = [
+            cruise
+            for destination, experience_types in cruise_lines.items()
+            for experience_type, cruises in experience_types.items()
+            for cruise in cruises
+        ]
         matching_cruises = [line for line in all_cruise_lines if direct_search.lower() in line.lower()]
         matching_resorts = [resort for resort in sum(resorts.values(), []) if direct_search.lower() in resort.lower()]
 
@@ -140,7 +145,12 @@ def direct_selection(client_name, client_email, client_phone):
     direct_selection_type = st.selectbox("Select the type of option to view:", ["Cruise Line", "Resort"])
     if direct_selection_type == "Cruise Line":
         # Correctly flatten all cruise line names
-        all_cruise_lines = [cruise for destination in cruise_lines for experience_type in cruise_lines[destination] for cruise in cruise_lines[destination][experience_type]]
+        all_cruise_lines = [
+            cruise
+            for destination, experience_types in cruise_lines.items()
+            for experience_type, cruises in experience_types.items()
+            for cruise in cruises
+        ]
         selected_cruise = st.selectbox("Select a cruise line:", all_cruise_lines)
         if selected_cruise:
             display_cruise_details(selected_cruise, "Direct Selection")
@@ -154,6 +164,7 @@ def display_cruise_details(cruise_line, destination):
     st.subheader(f"Details for {cruise_line}")
     st.write(f"**Destination**: {destination}")
     st.write(f"**Ship Size**: Medium to Large")
+    st.write(f"**Known Activities**: Specialty dining, entertainment
     st.write(f"**Known Activities**: Specialty dining, entertainment shows, spas, and more.")
     st.write(f"**Popular Excursions**: Island tours, adventure sports, cultural experiences.")
 
